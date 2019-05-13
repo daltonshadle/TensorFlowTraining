@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="872f22f0-8d19-42c9-92c2-ea2b500b6626" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/tensorflow_wk3.py" beforeDir="false" afterPath="$PROJECT_DIR$/tensorflow_wk3.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tensorflow_stock.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,8 +16,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tensorflow_wk1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+            <state relative-caret-position="-117">
+              <caret line="10" column="73" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="73" />
               <folding>
                 <element signature="e#77#100#0" expanded="true" />
               </folding>
@@ -27,21 +28,33 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tensorflow_wk2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="238">
+              <caret line="40" column="36" selection-start-line="40" selection-start-column="36" selection-end-line="40" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tensorflow_wk3.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="121">
+              <caret line="82" column="30" lean-forward="true" selection-start-line="82" selection-start-column="30" selection-end-line="82" selection-end-column="30" />
               <folding>
-                <element signature="e#78#101#0" expanded="true" />
+                <element signature="e#153#176#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tensorflow_wk3.py">
+        <entry file="file://$PROJECT_DIR$/tensorflow_stock.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="43" column="60" lean-forward="true" selection-start-line="43" selection-start-column="60" selection-end-line="43" selection-end-column="60" />
+            <state relative-caret-position="243">
+              <caret line="173" column="5" selection-start-line="173" selection-start-column="5" selection-end-line="173" selection-end-column="5" />
               <folding>
-                <element signature="e#78#101#0" expanded="true" />
+                <element signature="e#152#175#0" expanded="true" />
+                <element signature="e#638#895#0" />
+                <element signature="e#1031#1370#0" />
               </folding>
             </state>
           </provider>
@@ -65,6 +78,7 @@
         <option value="$PROJECT_DIR$/tensorflow_wk1.py" />
         <option value="$PROJECT_DIR$/tensorflow_wk2.py" />
         <option value="$PROJECT_DIR$/tensorflow_wk3.py" />
+        <option value="$PROJECT_DIR$/tensorflow_stock.py" />
       </list>
     </option>
   </component>
@@ -79,7 +93,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -91,6 +104,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -109,7 +123,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.tensorflow_wk3">
+  <component name="RunManager" selected="Python.tensorflow_stock">
+    <configuration name="tensorflow_stock" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="PythonProjects" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tensorflow_stock.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="tensorflow_wk1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="PythonProjects" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -175,6 +210,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.tensorflow_stock" />
         <item itemvalue="Python.tensorflow_wk3" />
         <item itemvalue="Python.tensorflow_wk2" />
         <item itemvalue="Python.tensorflow_wk1" />
@@ -220,17 +256,18 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/tensorflow_wk2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#78#101#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="238">
+          <caret line="40" column="36" selection-start-line="40" selection-start-column="36" selection-end-line="40" selection-end-column="36" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/tensorflow/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/tensorflow_wk1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+        <state relative-caret-position="-117">
+          <caret line="10" column="73" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="73" />
           <folding>
             <element signature="e#77#100#0" expanded="true" />
           </folding>
@@ -239,10 +276,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tensorflow_wk3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="43" column="60" lean-forward="true" selection-start-line="43" selection-start-column="60" selection-end-line="43" selection-end-column="60" />
+        <state relative-caret-position="121">
+          <caret line="82" column="30" lean-forward="true" selection-start-line="82" selection-start-column="30" selection-end-line="82" selection-end-column="30" />
           <folding>
-            <element signature="e#78#101#0" expanded="true" />
+            <element signature="e#153#176#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tensorflow_stock.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="173" column="5" selection-start-line="173" selection-start-column="5" selection-end-line="173" selection-end-column="5" />
+          <folding>
+            <element signature="e#152#175#0" expanded="true" />
+            <element signature="e#638#895#0" />
+            <element signature="e#1031#1370#0" />
           </folding>
         </state>
       </provider>

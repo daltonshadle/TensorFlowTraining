@@ -1,35 +1,24 @@
 # *************************************************************************
-# ******************************** Imports ********************************
+# ******************************************** Imports *********************************************
 import tensorflow as tf
 from tensorflow import keras
 from keras.optimizers import SGD
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plot
 import requests
 import numpy as np
 
 
-# ************************** Variable Definitions *************************
-global training_data, training_labels, test_data, test_labels, model, api_key, api_data
-
-
-# ***************************** Pre-processing ****************************
-# Check TensorFlow version
-print(tf.__version__)
-
-
-# ****************************** Callback Class ***************************
+# ****************************************** Callback Class ****************************************
 class MyCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
         desired_accuracy = 0.90
-        if (logs.get('acc') > desired_accuracy):
+        if logs.get('acc') > desired_accuracy:
             print("\nReached " + (desired_accuracy*100).__str__() + "% accuracy so cancelling training!")
             self.model.stop_training = True
 
 
-# ****************************** Get CSV Data *****************************
+# ****************************************** Get API Key *******************************************
 def get_api_key():
-    # Global variables
-    global api_key
     api_key = ""
     api_filename = "API_KEY.txt"
     api_string = "AlphaAdvantage"
@@ -40,11 +29,13 @@ def get_api_key():
             api_key = line.split(":-")[1]
             f.close()
 
+    return api_key
 
-# ****************************** Get API Data *****************************
-def get_api_data(symbol):
-    # Global variables
-    global api_key, api_data
+
+# ****************************************** Get API Data ******************************************
+def get_api_data(api_key, symbol):
+    data_list = []
+    api_data = None
     query = "https://www.alphavantage.co/query?"
     function_string = "function=TIME_SERIES_DAILY_ADJUSTED"
     symbol_string = "&symbol=" + symbol
@@ -61,19 +52,6 @@ def get_api_data(symbol):
     else:
         print("API data loading failed.")
 
-
-# ************************** Preprocess Train Data ************************
-def preprocess_train_data():
-    # Global variables
-    global api_data, training_data, training_labels
-    days_to_label = 3
-    data_list = list()
-    training_data = np.ndarray(shape=(1, days_to_label,))
-    training_labels = np.ndarray(shape=(1,))
-
-    open_max = 0
-    close_max = 0
-
     # Iterate through all items in JSON file
     for item in api_data["Time Series (Daily)"]:
         item_dict = {
@@ -82,93 +60,130 @@ def preprocess_train_data():
             "close": float(api_data["Time Series (Daily)"][item]["4. close"])
         }
 
-        if (open_max < item_dict["open"]):
-            open_max = item_dict["open"]
-        if (close_max < item_dict["close"]):
-            close_max = item_dict["close"]
-
         data_list.append(item_dict)
 
-    # Normalize data
+    # Reverse data_list to have order as old -> new
+    data_list.reverse()
+
+    return data_list
+
+
+# ****************************************** Plot API Data *****************************************
+def plot_api_data(data_list):
+    # Initialize list variable for plotting
+    closing_list = []
+
+    # Iterate over the api data and collect closing values
     for item in data_list:
-        item["open"] = item["open"]/open_max
-        item["close"] = item["close"] / close_max
+        closing_list.append(item["close"])
+
+    # Plot closing data
+    plot.plot(closing_list)
+    plot.show()
+
+
+# ************************************** Pre-process Train Data ************************************
+def preprocess_train_data(data_list, days_to_label=5):
+    # Initialize variables
+    training_data = np.empty(shape=(1, days_to_label))
+    training_labels = np.empty(shape=(1,), dtype=int)
 
     # Setup training data and labels
     for index, item in enumerate(data_list):
-        # Get the data for "today"
-        if (index < len(data_list) - days_to_label):
-            next_day = item
-            today = data_list[index + 1]
-            yesterday = data_list[index + 2]
-            yesterday_minus_1 = data_list[index + 3]
+        # Get the data for current day
+        if index > days_to_label:
+            tomorrow = item
+            index_train_data = np.array([])
 
-            # Training data based on day, day-1, day-2 close data
-            train_data = np.array([
-                today.get("close"),
-                yesterday.get("close"),
-                yesterday_minus_1.get("close")
-            ])
+            # Training data based on days_to_label
+            for i in range(days_to_label):
+                index_train_data = np.append(index_train_data, data_list[index - i]["close"])
 
             # Training label based on the next days performance (up = 1, down = 0)
-            train_label = 1 if (next_day.get("open") < next_day.get("close")) else 0
+            train_label = 1 if (tomorrow.get("open") < tomorrow.get("close")) else 0
 
-            training_data = np.vstack((training_data, train_data))
+            # Add training data and label to list
+            training_data = np.vstack((training_data, index_train_data))
             training_labels = np.vstack((training_labels, train_label))
     training_labels = np.delete(training_labels, 0, 0)
+    training_labels = np.squeeze(np.asarray(training_labels))
     training_data = np.delete(training_data, 0, 0)
 
+    return [training_data, training_labels]
 
-# **************************** Model Definition ***************************
-def model_def():
-    # Global variables
-    global training_data, model
+# *************************************** Normalize Train Data *************************************
+def normalize_data_list(data_list):
+    # Initialize variables
+    open_max = 0
+    close_max = 0
+
+    # Iterate list and find maxes
+    for item in data_list:
+        temp_open = item["open"]
+        temp_close = item["close"]
+
+        if temp_open > open_max:
+            open_max = temp_open
+        if temp_close > close_max:
+            close_max = temp_close
+
+    # Iterate list and normalize data
+    for item in data_list:
+        item["open"] = item["open"] / open_max
+        item["close"] = item["close"] / close_max
+
+    return data_list
+
+
+# **************************************** Model Definition ****************************************
+def model_def(training_data):
+    # Initialize variables
+    model = tf.keras.models.Sequential()
 
     # Create NN layers
     batch_size, input_dim = training_data.shape
-    hidden_layer_nodes = 10
-    output_layer_nodes = 1
-    model = tf.keras.models.Sequential([tf.keras.layers.Dense(hidden_layer_nodes, input_dim=input_dim,
-                                                              kernel_initializer='normal', activation='relu'),
-                                        tf.keras.layers.Dense(output_layer_nodes, kernel_initializer='normal',
-                                                              activation='sigmoid')])
+    in_neurons_1 = 10
+    in_neurons_2 = 10
+    out_neurons = 1
+
+    model.add(tf.keras.layers.Dense(in_neurons_1, input_dim=input_dim, activation='relu'))
+    model.add(tf.keras.layers.Dense(in_neurons_2, activation='relu'))
+    model.add(tf.keras.layers.Dense(out_neurons, activation='sigmoid'))
 
     # Specify NN optimizing method and loss calculation method
-    model.compile(optimizer='rmsprop',
-                  loss='binary_crossentropy',
-                  metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    return model
 
 
-# ******************************** Model Fit ******************************
-def model_fit():
-    # Global variables
-    global training_data, training_labels, model
-
+# ******************************************** Model Fit *******************************************
+def model_fit(model, training_data, training_labels, epochs=100):
     # Fit training data
-    model.fit(training_data, training_labels, epochs=15, callbacks=[MyCallback()], verbose=2)
+    model.fit(training_data, training_labels, epochs=epochs, callbacks=[MyCallback()],
+              verbose=2, use_multiprocessing=True)
+
+    return model
 
 
-# ***************************** Model Evaluate ****************************
-def model_eval():
-    # Global variables
-    global training_data, training_labels, test_data, test_labels, model
-
+# ***************************************** Model Evaluate *****************************************
+def model_eval(model, test_data, test_labels):
     # Fit test data and evaluate
     model.evaluate(test_data, test_labels)
 
 
-# ***************************** Main Function *****************************
+# ***************************************** Main Function ******************************************
 # Main for calling all functions in
 def main():
     print("Starting program")
-    get_api_key()
-    get_api_data("AAPL")
-    preprocess_train_data()
+    data_list = get_api_data(get_api_key(), "AAPL")
+    data_list = normalize_data_list(data_list)
 
-    #model_def()
-    #model_fit()
+    [training_data, training_labels] = preprocess_train_data(data_list, days_to_label=5)
+
+    stock_model = model_def(training_data)
+    stock_model = model_fit(stock_model, training_data, training_labels, epochs=50)
 
 
-# ************************* Main Function Execute *************************
+# ************************************* Main Function Execute **************************************
 # Execute the main function
 main()
